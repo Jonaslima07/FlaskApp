@@ -1,18 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import request, jsonify
 import sqlite3
-
-app = Flask(__name__)
-
-propriedadesGlobal = [
-    {'id': 1, 'nome': 'Sítio Lajes', 'cidade': 'Solânea'},
-    {'id': 2, 'nome': 'Sítio Titara'},
-    {'id': 3, 'nome': 'Poço Escuro'}
-]
-
-
-def getConnection():
-    # 1 - Conectar.
-    return sqlite3.connect('agricolaif.db')
+from Models.Propriedade import Propriedade
+from helps.aplicattion import app
+from helps.database import getConnection
 
 
 @app.route("/")
@@ -21,23 +11,11 @@ def homeResource():
     return jsonify(aplicacao), 200
 
 
-def encotrarMaiorId():
-    maiorId = 0
-    for propriedade in propriedadesGlobal:
-        if (propriedade['id'] > maiorId):
-            maiorId = propriedade['id']
-    return maiorId
-
-
-def calcularProximoId():
-    return encotrarMaiorId() + 1
-
-
 @app.get("/propriedades")
 def propriedades_get():
     try:
         # 1 - Conectar.
-        connection = sqlite3.connect('agricolaif.db')
+        connection = getConnection()
         # 2 - Obter cursor.
         cursor = connection.cursor()
         # 3 - Executar.
@@ -48,13 +26,15 @@ def propriedades_get():
         # Iterar e transformar dados.
         propriedades = []
         for item in resultset:
-            propriedade = {'id': item[0], 'nome': item[1], 'cidade': item[2]}
-            propriedades.append(propriedade)
+            id = item[0]
+            nome = item[1]
+            cidade = item[2]
+            propriedade = Propriedade(id, nome, cidade)
+
+            propriedades.append(propriedade.toJson())
     except sqlite3.Error as e:
         return jsonify({'error': str(e)}), 500
-    finally:
-        # 5 - Fechar conexão.
-        connection.close()
+    
     return jsonify(propriedades), 200
 
 
@@ -67,7 +47,7 @@ def propriedades_post():
     # propriedadeNova['id'] = calcularProximoId()
     # propriedades.append(propriedadeNova)
     # 1 - Conectar.
-    connection = sqlite3.connect('agricolaif.db')
+    connection = getConnection()
 
     # 2 - Obter cursor.
     cursor = connection.cursor()
@@ -100,9 +80,8 @@ def getPropriedadeById(idPropriedade):
             "select * from tb_propriedades where id = ?", (idPropriedade,))
         # 4 - Retornar resultset
         resultset = cursor.fetchone()  # [] -> ()
-    finally:
-        # 5 - Fechar conexão.
-        connection.close()
+    except sqlite3.Error as e:
+        return jsonify({'error': str(e)}), 200
     return resultset
 
 
@@ -135,7 +114,7 @@ def propriedades_put(idPropriedade):
         resultset = getPropriedadeById(idPropriedade)
         if resultset is not None:
             # 3 - Executar.
-            cursor.execute("update tb_propriedades set nome = ?, cidade=? where id=?",
+            cursor.execute("update tb_propriedades set nome=?, cidade=? where id=?",
                            (propriedadeAtualizada['nome'], propriedadeAtualizada['cidade'], idPropriedade))
             # 3.1 - Confirmar - commit.
             connection.commit()
@@ -144,9 +123,7 @@ def propriedades_put(idPropriedade):
             return jsonify(propriedadeAtualizada), 200
     except sqlite3.Error as e:
         return jsonify({'error': str(e)}), 500
-    finally:
-        # 5 - Fechar conexão.
-        connection.close()
+    
 
     return (jsonify({'mensagem': 'Propriedade não encontrada'}), 404)
 
@@ -160,18 +137,14 @@ def propriedades_delete(idPropriedade):
         cursor = connection.cursor()
         # Verificar se a pripriedade a ser atualizada existe.
         resultset = getPropriedadeById(idPropriedade)
-        print(resultset)
-        # if resultset is not None:
-        if resultset is None:
-            return (jsonify({'mensagem': 'Propriedade não encontrada'}), 404)
+        if resultset is not None:
             # 3 - Executar.
-        cursor.execute(
+            cursor.execute(
                 "delete from tb_propriedades where id = ?", (idPropriedade, ))
             # 3.1 - Confirmar - commit.
-        connection.commit()
-        return {'mensagem': "Removido com sucesso"}, 200
+            connection.commit()
+            return {'mensagem': "Removido com sucesso"}, 200
     except sqlite3.Error as e:
         return jsonify({'error': str(e)}), 500
-    finally:
-        # 5 - Fechar conexão.
-        connection.close()
+    
+    return (jsonify({'mensagem': 'Propriedade não encontrada'}), 404)
