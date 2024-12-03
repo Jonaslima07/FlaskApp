@@ -3,7 +3,9 @@ class Propriedade:
         self.id = id
         self.nome = nome
         self.cidade = cidade
-    
+    def __repr__(self) -> str:
+        return f"<Propriedade: {self.id}, {self.nome}, {self.cidade}>"
+
     def getNome(self):
         return self.nome
 

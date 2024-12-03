@@ -1,7 +1,10 @@
 from flask import request, jsonify
 import sqlite3
+
 from Models.Propriedade import Propriedade
 from helps.aplicattion import app
+from helps.logging import logger
+
 from helps.database import getConnection
 
 
@@ -14,6 +17,7 @@ def homeResource():
 @app.get("/propriedades")
 def propriedades_get():
     try:
+        logger.info("listando propriedades")
         # 1 - Conectar.
         connection = getConnection()
         # 2 - Obter cursor.
@@ -30,8 +34,8 @@ def propriedades_get():
             nome = item[1]
             cidade = item[2]
             propriedade = Propriedade(id, nome, cidade)
-
             propriedades.append(propriedade.toJson())
+            logger.info(propriedade)
     except sqlite3.Error as e:
         return jsonify({'error': str(e)}), 500
     
