@@ -1,0 +1,18 @@
+listando propriedades
+[]
+[{'id': 1, 'nome': 'Sítio Lajes Grande', 'cidade': 'Bananeiras'}]
+[{'id': 1, 'nome': 'Sítio Lajes Grande', 'cidade': 'Bananeiras'}, {'id': 2, 'nome': 'Sítio Sapucaia', 'cidade': 'Guarabira'}]
+[{'id': 1, 'nome': 'Sítio Lajes Grande', 'cidade': 'Bananeiras'}, {'id': 2, 'nome': 'Sítio Sapucaia', 'cidade': 'Guarabira'}, {'id': 3, 'nome': 'Sítio Pedra Grande', 'cidade': 'Guarabira'}]
+[{'id': 1, 'nome': 'Sítio Lajes Grande', 'cidade': 'Bananeiras'}, {'id': 2, 'nome': 'Sítio Sapucaia', 'cidade': 'Guarabira'}, {'id': 3, 'nome': 'Sítio Pedra Grande', 'cidade': 'Guarabira'}, {'id': 4, 'nome': 'Sítio Pedra Pequena', 'cidade': 'Guarabira'}]
+listando propriedades
+<Propriedade: 1, Sítio Lajes Grande, Bananeiras>
+<Propriedade: 2, Sítio Sapucaia, Guarabira>
+<Propriedade: 3, Sítio Pedra Grande, Guarabira>
+<Propriedade: 4, Sítio Pedra Pequena, Guarabira>
+<Propriedade: 7, Sítio Boi Brabo, Araçagi>
+2024-12-03 14:51:56,225 - INFO - listando propriedades
+2024-12-03 14:51:56,305 - INFO - <Propriedade: 1, Sítio Lajes Grande, Bananeiras>
+2024-12-03 14:51:56,305 - INFO - <Propriedade: 2, Sítio Sapucaia, Guarabira>
+2024-12-03 14:51:56,306 - INFO - <Propriedade: 3, Sítio Pedra Grande, Guarabira>
+2024-12-03 14:51:56,307 - INFO - <Propriedade: 4, Sítio Pedra Pequena, Guarabira>
+2024-12-03 14:51:56,308 - INFO - <Propriedade: 7, Sítio Boi Brabo, Araçagi>
